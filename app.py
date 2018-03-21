@@ -89,7 +89,7 @@ def wechat():
         	if msg.content == 'ip':
         		reply = create_reply(getIp(), msg)
         	else:
-            	reply = create_reply(msg.content, msg)
+        		reply = create_reply(msg.content, msg)
         elif msg.type == 'voice':
             reply = create_reply('voice msg',msg)
         else:
