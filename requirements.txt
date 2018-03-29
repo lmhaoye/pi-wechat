@@ -1,0 +1,7 @@
+requests
+wechatpy
+Flask
+Flask_Script
+Flask_Migrate
+Flask-Redis
+redis

@@ -1,50 +1,22 @@
-from __future__ import absolute_import, unicode_literals
-import configparser
-from flask import Flask, request, abort, render_template
+from . import wechat
+
+from flask import request, abort, current_app
 from wechatpy.crypto import WeChatCrypto
 from wechatpy import parse_message, create_reply
 from wechatpy.utils import check_signature
 from wechatpy.exceptions import InvalidSignatureException
 from wechatpy.exceptions import InvalidAppIdException
 
-# set token or get from environments
-# TOKEN = os.getenv('WECHAT_TOKEN', 'BGZ7ATTFKHASYYLO')
-# EncodingAESKey = os.getenv('WECHAT_ENCODING_AES_KEY', '')
-# AppId = os.getenv('WECHAT_APP_ID', 'wxc7531fa470e0f0e7')
-cf = configparser.ConfigParser()
-cf.read('app.conf')
-
-TOKEN = cf.get('wx','token')
-EncodingAESKey = ''
-AppId = cf.get('wx','appid')
-Raw = cf.getboolean('wx','Raw')
-
-app = Flask(__name__)
 
 
-@app.route('/')
-def index():
-    host = request.url_root
-    return render_template('index.html', host=host)
+@wechat.route('/wechat', methods=['GET', 'POST'])
+def wechatView():
 
-@app.route('/pi/ip',methods=['GET','POST'])
-def piIp():
-    if request.method == 'GET':
-        with open('./ip.txt',mode='r',encoding='utf-8') as f:
-            return f.read()
-    else:
-        ip = request.form['ip']
-        print('record ip:%s' % ip)
-        with open('./ip.txt',mode='w+',encoding='utf-8') as f:
-            f.write(ip)
-        return 'ok'
-def getIp():
-	with open('./ip.txt',mode='r',encoding='utf-8') as f:
-            return f.read()
+    TOKEN = current_app.config['TOKEN']
+    EncodingAESKey = current_app.config['EA']
+    AppId = current_app.config['APPID']
+    Raw = current_app.config['RAW']
 
-
-@app.route('/wechat', methods=['GET', 'POST'])
-def wechat():
     signature = request.args.get('signature', '')
     timestamp = request.args.get('timestamp', '')
     nonce = request.args.get('nonce', '')
@@ -87,7 +59,7 @@ def wechat():
 
         if msg.type == 'text':
         	if msg.content == 'ip':
-        		reply = create_reply(getIp(), msg)
+        		reply = create_reply('', msg)
         	else:
         		reply = create_reply(msg.content, msg)
         elif msg.type == 'voice':
@@ -102,6 +74,3 @@ def wechat():
             )
         else:
             return reply.render()
-
-if __name__ == '__main__':
-    app.run('127.0.0.1', 5001, debug=True)
