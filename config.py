@@ -1,14 +1,15 @@
 import os
-import configparser
+from ext import cf
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
-    cf = configparser.ConfigParser()
-    cf.read('app.conf')
+
     TOKEN = cf.get('wx','token')
-    EA = ''
     APPID = cf.get('wx','appid')
+    SECRET = cf.get('wx','secret')
     RAW = cf.getboolean('wx','Raw')
+    EA = ''
+    
 
     REDIS_URL = cf.get('redis','url')
 

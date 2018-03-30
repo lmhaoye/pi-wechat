@@ -1,5 +1,4 @@
 requests
 wechatpy
 Flask
-Flask_Script
-Flask-Redis
+redis
