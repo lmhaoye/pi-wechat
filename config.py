@@ -19,10 +19,10 @@ class Config(object):
 class DevelopmentConfig(Config):
     DEBUG = True
 
-class TestingConfig(Config):
+class ProdConfig(Config):
     DEBUG = False
 
 config = {
     'development': DevelopmentConfig,
-    'test': TestingConfig
+    'prod': ProdConfig
 }
