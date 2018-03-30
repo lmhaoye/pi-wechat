@@ -7,6 +7,7 @@ def index():
     host = request.url_root
     return render_template('index.html', host=host)
 
-@main.route('/test')
-def test():
-    return current_app.config['TOKEN']
+@main.route('/get/ip')
+def getIp():
+    real_ip = request.headers.get('X-Real-Ip', request.remote_addr)
+    return real_ip

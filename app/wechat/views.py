@@ -1,5 +1,7 @@
 from . import wechat
 
+from app import redis_store
+
 from flask import request, abort, current_app
 from wechatpy.crypto import WeChatCrypto
 from wechatpy import parse_message, create_reply
@@ -59,7 +61,7 @@ def wechatView():
 
         if msg.type == 'text':
         	if msg.content == 'ip':
-        		reply = create_reply('', msg)
+        		reply = create_reply(redis_store.get('pi_ip'), msg)
         	else:
         		reply = create_reply(msg.content, msg)
         elif msg.type == 'voice':
